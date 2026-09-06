@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Real Foods — Namkeen & Chips E-commerce Website
 
-## Getting Started
+A production-oriented, full-stack e-commerce website for an Indian namkeen /
+chips manufacturing business.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16 (App Router)** + TypeScript (strict)
+- **Tailwind CSS v4** with a premium food-brand design system
+- **shadcn/ui**-style components (Button, Card, Badge, Input, etc.)
+- **PostgreSQL + Prisma** (schema prepared; DB not wired up yet)
+- **Zod + React Hook Form** (checkout)
+- Auth architecture prepared with Auth.js (not implemented yet)
+
+## Status
+
+This is **stage 1**: the storefront and admin UI are built against **mock
+data**. Auth, payments, database reads/writes, and live order management are
+intentionally deferred to later stages. Everything is structured so mock data
+can be swapped for real Prisma queries without rewriting the UI.
+
+## Supplied assets
+
+Real business images are in `real-foods-product-assets/` and copied to
+`/public/images`:
+
+- `/images/products/murukku/murukku-pack.jpg` — Traditional Murukku
+- `/images/products/achappam/achappam-pack.jpg` — Rose Achappam
+- `/images/hero/murukku-lifestyle.jpg` — hero / lifestyle image
+
+Product names, prices, weights, descriptions, ingredients and stock are
+**pending business confirmation** — currently realistic placeholders, clearly
+marked in the UI.
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command           | Description              |
+| ----------------- | ------------------------ |
+| `npm run dev`     | Start development server |
+| `npm run build`   | Production build         |
+| `npm run lint`    | ESLint                   |
+| `npx tsc --noEmit`| Type check               |
 
-## Learn More
+## Database
 
-To learn more about Next.js, take a look at the following resources:
+The Prisma schema in `prisma/schema.prisma` is validated. To start using it:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Set a real `DATABASE_URL` in `.env`.
+2. `npx prisma migrate dev`
+3. Replace the mock reads in `src/lib/data/` with Prisma queries.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project structure
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/app/` — customer routes + `/admin` dashboard
+- `src/components/` — UI, product, cart, order, layout, admin components
+- `src/lib/data/` — mock data layer (products, orders)
+- `src/lib/auth/` — auth architecture placeholders
+- `src/types/` — shared domain types
+- `prisma/schema.prisma` — target database schema
