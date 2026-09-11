@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export const metadata: Metadata = {
   title: "Login",
   description: "Sign in to your Real Foods account.",
+  robots: { index: false, follow: false },
 };
 
 export default function LoginPage() {

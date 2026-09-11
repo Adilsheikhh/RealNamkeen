@@ -5,6 +5,7 @@ import { TrackOrderForm } from "@/components/order/track-order-form";
 export const metadata: Metadata = {
   title: "Track your order",
   description: "Track your Real Foods order status.",
+  robots: { index: false, follow: false },
 };
 
 export default function TrackOrderPage() {

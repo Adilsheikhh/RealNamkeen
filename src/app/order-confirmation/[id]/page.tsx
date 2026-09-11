@@ -16,6 +16,7 @@ interface OrderConfirmationPageProps {
 export const metadata: Metadata = {
   title: "Order confirmation",
   description: "Thanks for your order with Real Foods.",
+  robots: { index: false, follow: false },
 };
 
 export default async function OrderConfirmationPage({

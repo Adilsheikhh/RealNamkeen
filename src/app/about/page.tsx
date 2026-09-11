@@ -7,7 +7,8 @@ import { ProductImage } from "@/components/product/product-image";
 export const metadata: Metadata = {
   title: "About us",
   description:
-    "Learn about Real Foods — our story, our craft and how we make traditional Indian snacks.",
+    "Learn about Real Foods, Kannur — our story, our craft and how we make traditional Indian snacks.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

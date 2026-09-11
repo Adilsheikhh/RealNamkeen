@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export const metadata: Metadata = {
   title: "Create account",
   description: "Create a Real Foods account to track orders and check out faster.",
+  robots: { index: false, follow: false },
 };
 
 export default function RegisterPage() {

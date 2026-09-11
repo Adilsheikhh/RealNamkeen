@@ -5,6 +5,7 @@ import { CheckoutForm } from "@/components/checkout/checkout-form";
 export const metadata: Metadata = {
   title: "Checkout",
   description: "Complete your Real Foods order.",
+  robots: { index: false, follow: false },
 };
 
 export default function CheckoutPage() {

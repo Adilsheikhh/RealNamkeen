@@ -5,7 +5,9 @@ import { Mail, MapPin, Phone } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with Real Foods — we'd love to hear from you.",
+  description:
+    "Contact Real Foods in Kannur, Kerala — call +91 9526395590 or email realfoodspnr@gmail.com for orders and enquiries.",
+  alternates: { canonical: "/contact" },
 };
 
 const details = [

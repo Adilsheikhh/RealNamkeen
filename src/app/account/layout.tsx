@@ -1,8 +1,14 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { LayoutDashboard, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getCurrentUser } from "@/lib/auth/session";
+
+export const metadata: Metadata = {
+  title: "My account",
+  robots: { index: false, follow: false },
+};
 
 const accountLinks = [
   { href: "/account", label: "Account", icon: LayoutDashboard },

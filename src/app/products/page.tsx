@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { JsonLd } from "@/components/seo/json-ld";
+import { SITE_URL } from "@/lib/site";
 import { CategoryFilter } from "@/components/product/category-filter";
 import { ProductGrid } from "@/components/product/product-grid";
 import { SearchBar } from "@/components/product/search-bar";
@@ -8,7 +10,8 @@ import { getCategory, listProducts } from "@/lib/db/products";
 export const metadata: Metadata = {
   title: "Products",
   description:
-    "Browse Real Foods — traditional murukku, achappam, chips and namkeen, freshly made.",
+    "Browse Real Foods — traditional murukku, achappam, chips and namkeen, freshly made in Kannur, Kerala.",
+  alternates: { canonical: "/products" },
 };
 
 interface ProductsPageProps {
@@ -37,8 +40,41 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     );
   }
 
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: activeCategory ? `${activeCategory.name} — Real Foods` : "All Products — Real Foods",
+    url: `${SITE_URL}/products`,
+    numberOfItems: filtered.length,
+    itemListElement: filtered.map((product, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: product.name,
+      url: `${SITE_URL}/products/${product.slug}`,
+      image: product.images[0]?.url
+        ? `${SITE_URL}${product.images[0].url}`
+        : undefined,
+    })),
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: activeCategory?.name ?? "Products",
+        item: `${SITE_URL}/products`,
+      },
+    ],
+  };
+
   return (
     <div className="container-page py-10 sm:py-14">
+      <JsonLd data={itemListJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       <div className="max-w-2xl">
         <p className="text-sm font-semibold uppercase tracking-widest text-amber-700">
           Our products
