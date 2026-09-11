@@ -1,27 +1,45 @@
+import { auth } from "@/auth";
+import { prisma } from "@/lib/prisma";
 import type { AuthUser, UserRole } from "@/types/auth";
 
 /**
- * Server-side session/authorization helpers.
+ * Server-side session helpers backed by Auth.js.
  *
- * NOT IMPLEMENTED YET. These are typed placeholders that document the
- * auth architecture (Auth.js/NextAuth backed, checked server-side).
- *
- * In a later stage `getCurrentUser()` will read the Auth.js session and
- * `requireRole()` will redirect unauthenticated/unauthorized users
- * before any admin or account page renders. Never gate admin access by
- * hiding UI alone.
+ * getCurrentUser() returns the signed-in user (with role) or null.
+ * requireRole() returns the user if the role matches, otherwise redirects.
  */
 
 export async function getCurrentUser(): Promise<AuthUser | null> {
-  // TODO: replace with Auth.js `auth()` session lookup.
-  return null;
+  const session = await auth();
+  if (!session?.user?.id) return null;
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      role: true,
+    },
+  });
+
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role as AuthUser["role"],
+  };
 }
 
 export async function requireRole(role: UserRole): Promise<AuthUser> {
-  // TODO: redirect to /login when no session, / when role not allowed.
   const user = await getCurrentUser();
-  if (!user || user.role !== role) {
-    throw new Error("Unauthorized — auth is not implemented yet");
+  if (!user) {
+    throw new Error("UNAUTHENTICATED");
+  }
+  if (user.role !== role) {
+    throw new Error("UNAUTHORIZED");
   }
   return user;
 }

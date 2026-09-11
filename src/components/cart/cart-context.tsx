@@ -25,7 +25,7 @@ interface CartLine {
   unitPrice: number;
   originalPrice?: number;
   quantity: number;
-  weightGrams: number;
+  weightGrams?: number;
   stock: number;
 }
 

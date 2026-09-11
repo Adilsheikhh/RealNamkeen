@@ -4,10 +4,10 @@ import { ArrowRight } from "lucide-react";
 import { SectionHeading } from "@/components/home/section-heading";
 import { ProductGrid } from "@/components/product/product-grid";
 import { Button } from "@/components/ui/button";
-import { getFeaturedProducts } from "@/lib/data/products";
+import { getFeaturedProducts } from "@/lib/db/products";
 
-export function FeaturedProductsSection() {
-  const featured = getFeaturedProducts();
+export async function FeaturedProductsSection() {
+  const featured = await getFeaturedProducts();
 
   return (
     <section className="bg-stone-100/60 py-16 sm:py-20">

@@ -2,8 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Mail, MapPin, Phone, Share2 } from "lucide-react";
 
-const placeholderContact = false;
-
 export function SiteFooter() {
   return (
     <footer className="mt-16 border-t border-stone-200 bg-stone-900 text-stone-300">

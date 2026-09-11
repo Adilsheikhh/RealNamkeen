@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 
 import { Badge } from "@/components/ui/badge";
-import { products } from "@/lib/data/products";
+import { listProducts } from "@/lib/db/products";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -10,7 +10,9 @@ export const metadata: Metadata = {
   description: "Manage Real Foods products.",
 };
 
-export default function AdminProductsPage() {
+export default async function AdminProductsPage() {
+  const products = await listProducts();
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -19,7 +21,7 @@ export default function AdminProductsPage() {
             Products
           </h2>
           <p className="mt-1 text-sm text-stone-500">
-            Sample catalogue — full create/edit flow comes later.
+            Live catalogue from the database.
           </p>
         </div>
         <Badge tone="amber">{products.length} products</Badge>

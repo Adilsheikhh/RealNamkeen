@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 import { Menu, ShoppingBag, User, X } from "lucide-react";
 
 import { useCart } from "@/components/cart/cart-context";
@@ -37,7 +38,9 @@ function Logo() {
 
 export function SiteHeader() {
   const { itemsCount } = useCart();
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
+  const isLoggedIn = Boolean(session?.user);
 
   return (
     <header className="sticky top-0 z-40 border-b border-stone-200/80 bg-background/90 backdrop-blur">
@@ -68,13 +71,24 @@ export function SiteHeader() {
             </Link>
           </Button>
           <Button asChild variant="ghost" size="icon" className="hidden md:inline-flex" aria-label="Account">
-            <Link href="/account">
+            <Link href={isLoggedIn ? "/account" : "/login"}>
               <User />
             </Link>
           </Button>
-          <Button asChild size="sm" className="hidden lg:inline-flex">
-            <Link href="/login">Login</Link>
-          </Button>
+          {isLoggedIn ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="hidden lg:inline-flex"
+              onClick={() => signOut({ callbackUrl: "/" })}
+            >
+              Logout
+            </Button>
+          ) : (
+            <Button asChild size="sm" className="hidden lg:inline-flex">
+              <Link href="/login">Login</Link>
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="icon"
@@ -109,20 +123,35 @@ export function SiteHeader() {
             ))}
             <li>
               <Link
-                href="/account"
+                href={isLoggedIn ? "/account" : "/login"}
                 onClick={() => setOpen(false)}
                 className="block rounded-xl px-4 py-3 text-base font-medium text-stone-700 hover:bg-stone-100"
               >
-                Account
+                {isLoggedIn ? "My Account" : "Login"}
               </Link>
             </li>
-            <li className="px-4 py-2">
-              <Button asChild className="w-full">
-                <Link href="/login" onClick={() => setOpen(false)}>
-                  Login
-                </Link>
-              </Button>
-            </li>
+            {isLoggedIn ? (
+              <li className="px-4 py-2">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => {
+                    setOpen(false);
+                    signOut({ callbackUrl: "/" });
+                  }}
+                >
+                  Logout
+                </Button>
+              </li>
+            ) : (
+              <li className="px-4 py-2">
+                <Button asChild className="w-full">
+                  <Link href="/login" onClick={() => setOpen(false)}>
+                    Login
+                  </Link>
+                </Button>
+              </li>
+            )}
           </ul>
         </nav>
       )}

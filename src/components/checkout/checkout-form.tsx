@@ -1,11 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 
+import { createOrderAction } from "@/app/actions/orders";
 import { useCart } from "@/components/cart/cart-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +31,8 @@ type CheckoutValues = z.infer<typeof checkoutSchema>;
 
 export function CheckoutForm() {
   const router = useRouter();
-  const { lines, subtotal, deliveryCharge, total } = useCart();
+  const { lines, subtotal, deliveryCharge, total, clearCart } = useCart();
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const {
     register,
@@ -43,10 +46,35 @@ export function CheckoutForm() {
     },
   });
 
-  async function onSubmit() {
-    // Placeholder — order persistence and payment added in a later stage.
-    await new Promise((r) => setTimeout(r, 700));
-    router.push("/order-confirmation/rf-mock-order-1");
+  async function onSubmit(values: CheckoutValues) {
+    setServerError(null);
+
+    const result = await createOrderAction({
+      items: lines.map((line) => ({
+        variantId: line.variantId,
+        quantity: line.quantity,
+      })),
+      address: {
+        name: `${values.firstName} ${values.lastName}`.trim(),
+        phone: values.phone,
+        line1: values.line1,
+        line2: values.line2 || undefined,
+        city: values.city,
+        state: values.state,
+        pincode: values.pincode,
+      },
+      note: values.note || undefined,
+      paymentMethod: "COD",
+    });
+
+    if (!result.ok) {
+      setServerError(result.error);
+      return;
+    }
+
+    clearCart();
+    router.push(`/order-confirmation/${result.orderNumber}`);
+    router.refresh();
   }
 
   return (
@@ -105,6 +133,12 @@ export function CheckoutForm() {
           </p>
         )}
 
+        {serverError && (
+          <p className="mt-6 rounded-xl bg-red-50 p-4 text-sm font-medium text-red-700">
+            {serverError}
+          </p>
+        )}
+
         <div className="mt-8 flex items-center justify-between border-t border-stone-200 pt-6">
           <p className="text-sm text-stone-500">
             Paying by cash on delivery after confirm.
@@ -114,10 +148,6 @@ export function CheckoutForm() {
             Place order
           </Button>
         </div>
-        <p className="mt-4 text-xs text-stone-400">
-          Checkout is a frontend placeholder in this build — payment and order
-          storage are implemented in a later stage.
-        </p>
       </form>
 
       <div className="h-fit rounded-2xl border border-stone-200 bg-stone-50 p-6 lg:sticky lg:top-24">

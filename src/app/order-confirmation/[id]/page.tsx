@@ -6,7 +6,7 @@ import { OrderStatusBadge } from "@/components/order/order-status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getMockOrderById } from "@/lib/data/orders";
+import { getOrderByOrderNumber } from "@/lib/db/orders";
 import { formatPrice } from "@/lib/utils";
 
 interface OrderConfirmationPageProps {
@@ -22,7 +22,7 @@ export default async function OrderConfirmationPage({
   params,
 }: OrderConfirmationPageProps) {
   const { id } = await params;
-  const order = getMockOrderById(id);
+  const order = await getOrderByOrderNumber(id.toUpperCase());
 
   return (
     <div className="container-page max-w-3xl py-10 sm:py-16">

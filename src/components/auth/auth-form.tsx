@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
+import { registerAction } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,14 +17,59 @@ interface AuthFormProps {
 
 export function AuthForm({ mode }: AuthFormProps) {
   const isLogin = mode === "login";
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // Placeholder — authentication is implemented in a later stage.
+    setError(null);
+    setSuccess(null);
     setLoading(true);
-    window.setTimeout(() => setLoading(false), 800);
+
+    const form = new FormData(e.currentTarget);
+
+    try {
+      if (!isLogin) {
+        const result = await registerAction({
+          firstName: form.get("firstName") as string,
+          lastName: form.get("lastName") as string,
+          email: form.get("email") as string,
+          phone: form.get("phone") as string,
+          password: form.get("password") as string,
+        });
+
+        if (!result.ok) {
+          setError(result.error);
+          setLoading(false);
+          return;
+        }
+
+        setSuccess("Account created — redirecting to login…");
+        setTimeout(() => router.push("/login"), 800);
+        return;
+      }
+
+      const result = await signIn("credentials", {
+        email: form.get("email") as string,
+        password: form.get("password") as string,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password.");
+        setLoading(false);
+        return;
+      }
+
+      router.push("/");
+      router.refresh();
+    } catch {
+      setError("Something went wrong. Please try again.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -36,6 +84,22 @@ export function AuthForm({ mode }: AuthFormProps) {
             <Label htmlFor="last-name">Last name</Label>
             <Input id="last-name" name="lastName" autoComplete="family-name" required />
           </div>
+        </div>
+      )}
+
+      {!isLogin && (
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="phone">Phone</Label>
+          <Input
+            id="phone"
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            inputMode="numeric"
+            required
+            minLength={10}
+            placeholder="10-digit mobile number"
+          />
         </div>
       )}
 
@@ -73,6 +137,18 @@ export function AuthForm({ mode }: AuthFormProps) {
         </div>
       </div>
 
+      {error && (
+        <p className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-700">
+          {error}
+        </p>
+      )}
+
+      {success && (
+        <p className="rounded-lg bg-green-50 p-3 text-sm font-medium text-green-700">
+          {success}
+        </p>
+      )}
+
       <Button type="submit" size="lg" className="mt-2" disabled={loading}>
         {loading && <Loader2 className="animate-spin" />}
         {isLogin ? "Sign in" : "Create account"}
@@ -94,10 +170,6 @@ export function AuthForm({ mode }: AuthFormProps) {
             </Link>
           </>
         )}
-      </p>
-
-      <p className="text-xs text-stone-400">
-        Authentication is not implemented yet in this build — this form is UI only.
       </p>
     </form>
   );

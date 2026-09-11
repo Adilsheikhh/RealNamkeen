@@ -2,10 +2,10 @@ export type CategorySlug =
   | "murukku"
   | "achappam"
   | "chips"
-  | "namkeen"
-  | "mixtures";
+  | "namkeen";
 
 export interface Category {
+  id?: string;
   slug: CategorySlug;
   name: string;
   description: string;
@@ -16,8 +16,8 @@ export interface ProductVariant {
   id: string;
   name: string;
   size: string;
-  /** Weight in grams */
-  weightGrams: number;
+  /** Weight in grams — omitted for count-based ("Nos") products */
+  weightGrams?: number;
   price: number;
   /** Compare-at / original price before discount */
   originalPrice?: number;

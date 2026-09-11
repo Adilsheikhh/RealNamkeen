@@ -45,7 +45,8 @@ export function CartItemList() {
                   {line.productName}
                 </Link>
                 <p className="mt-0.5 text-sm text-stone-500">
-                  {line.variantName} · {line.weightGrams}g
+                  {line.variantName}
+                  {line.weightGrams != null ? ` · ${line.weightGrams}g` : ""}
                 </p>
               </div>
               <button

@@ -12,7 +12,8 @@ import { OrderStatusBadge } from "@/components/order/order-status-badge";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { mockOrders } from "@/lib/data/orders";
+import { getOrderStats } from "@/lib/db/orders";
+import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -20,38 +21,43 @@ export const metadata: Metadata = {
   description: "Real Foods business management dashboard.",
 };
 
-export default function AdminDashboardPage() {
-  const stats = [
+export default async function AdminDashboardPage() {
+  const [stats, customerCount] = await Promise.all([
+    getOrderStats(),
+    prisma.user.count({ where: { role: "CUSTOMER" } }),
+  ]);
+
+  const statCards = [
     {
-      label: "Today's Orders",
-      value: 12,
+      label: "Total Orders",
+      value: stats.totalOrders,
       icon: ShoppingCart,
-      hint: "+2 vs yesterday",
+      hint: `${stats.pendingOrders} pending`,
     },
     {
       label: "Pending Orders",
-      value: mockOrders.filter((o) => o.status === "PENDING").length || 3,
+      value: stats.pendingOrders,
       icon: Timer,
       hint: "needs attention",
     },
     {
-      label: "Today's Revenue",
-      value: formatPrice(8420),
+      label: "Total Revenue",
+      value: formatPrice(stats.totalRevenue),
       icon: IndianRupee,
-      hint: "excl. delivery",
+      hint: `${stats.delivered} delivered`,
     },
     {
-      label: "Total Customers",
-      value: 486,
+      label: "Customers",
+      value: customerCount,
       icon: Users,
-      hint: "+18 this week",
+      hint: "registered accounts",
     },
   ];
 
   return (
     <div className="space-y-8">
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((stat) => (
+        {statCards.map((stat) => (
           <Card key={stat.label}>
             <CardContent className="p-5">
               <div className="flex items-center justify-between">
@@ -95,7 +101,7 @@ export default function AdminDashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100">
-                  {mockOrders.slice(0, 5).map((order) => (
+                  {stats.recentOrders.map((order) => (
                     <tr key={order.id} className="transition-colors hover:bg-stone-50">
                       <td className="px-6 py-3 font-medium text-stone-900">
                         {order.orderNumber}
@@ -153,7 +159,7 @@ export default function AdminDashboardPage() {
                 <Badge tone="red">Cancelled</Badge>
               </div>
               <p className="mt-3 text-xs text-stone-400">
-                Owners can update these statuses from orders once live.
+                Update order statuses from the Orders page.
               </p>
             </CardContent>
           </Card>

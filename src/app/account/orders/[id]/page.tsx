@@ -8,7 +8,8 @@ import { OrderStatusBadge } from "@/components/order/order-status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getMockOrderById } from "@/lib/data/orders";
+import { getCurrentUser } from "@/lib/auth/session";
+import { getOrderByOrderNumber } from "@/lib/db/orders";
 import { formatPrice } from "@/lib/utils";
 
 interface AccountOrderDetailPageProps {
@@ -23,9 +24,10 @@ export default async function AccountOrderDetailPage({
   params,
 }: AccountOrderDetailPageProps) {
   const { id } = await params;
-  const order = getMockOrderById(id);
+  const user = await getCurrentUser();
+  const order = await getOrderByOrderNumber(id.toUpperCase());
 
-  if (!order) {
+  if (!order || order.customerEmail !== user?.email) {
     notFound();
   }
 

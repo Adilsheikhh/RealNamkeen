@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { CategoryFilter } from "@/components/product/category-filter";
 import { ProductGrid } from "@/components/product/product-grid";
 import { SearchBar } from "@/components/product/search-bar";
-import { getCategory, products } from "@/lib/data/products";
+import { getCategory, listProducts } from "@/lib/db/products";
 
 export const metadata: Metadata = {
   title: "Products",
@@ -18,10 +18,11 @@ interface ProductsPageProps {
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const { category: categorySlug, q } = await searchParams;
 
-  const activeCategory = categorySlug != null ? getCategory(categorySlug) : undefined;
+  const activeCategory = categorySlug != null ? await getCategory(categorySlug) : undefined;
   const query = q?.trim().toLowerCase() ?? "";
 
-  let filtered = products.filter((p) => p.active);
+  const allProducts = await listProducts();
+  let filtered = allProducts;
 
   if (activeCategory) {
     filtered = filtered.filter((p) => p.categorySlug === activeCategory.slug);

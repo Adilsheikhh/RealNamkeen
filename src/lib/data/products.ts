@@ -3,13 +3,13 @@ import type { Category, Product } from "@/types/product";
 /**
  * Product data layer.
  *
- * Currently backed by in-memory mock data so the UI can be developed
- * before the database is wired in. Every function returns the same
- * shapes that the Prisma-backed implementation will provide, so the UI
- * does not need to change when we swap the data source.
+ * Backed by in-memory data for now, returning the same shapes the
+ * Prisma-backed implementation will provide, so the UI does not change
+ * when the data source is swapped.
  *
- * Business details (names, prices, weights, descriptions, ingredients,
- * stock) are pending confirmation unless supplied separately.
+ * Products, names, sizes and prices are the current business catalogue
+ * (18 products). Descriptions are brief storefront copy and stock levels
+ * are placeholders pending confirmation.
  */
 
 export const categories: Category[] = [
@@ -18,242 +18,560 @@ export const categories: Category[] = [
     name: "Murukku",
     description:
       "Classic crisp, spiral-shaped savoury snacks made the traditional way.",
-    image: "/images/products/murukku/murukku-pack.jpg",
+    image: "/images/products/murukku.jpg",
   },
   {
     slug: "achappam",
     name: "Achappam",
     description:
       "Light, crunchy traditional rose cookies with a delicate sweetness.",
-    image: "/images/products/achappam/achappam-pack.jpg",
+    image: "/images/products/achappam.jpg",
   },
   {
     slug: "chips",
     name: "Chips",
-    description: "Crispy, golden potato and banana chips.",
-    image: "/images/hero/murukku-lifestyle.jpg",
+    description: "Crispy, golden fried chips and crisps.",
+    image: "/images/products/chakli-chips.jpg",
   },
   {
     slug: "namkeen",
-    name: "Namkeen",
-    description: "Classic spiced Indian savoury snacks.",
-    image: "/images/products/murukku/murukku-pack.jpg",
-  },
-  {
-    slug: "mixtures",
-    name: "Mixtures",
-    description: "Nutty, crunchy blends made for sharing.",
-    image: "/images/hero/murukku-lifestyle.jpg",
+    name: "Namkeen & Papad",
+    description: "Classic spiced Indian savoury snacks and papads.",
+    image: "/images/products/papad-masala.jpg",
   },
 ];
 
 export const products: Product[] = [
   {
-    id: "prod_murukku",
-    name: "Traditional Murukku",
-    slug: "traditional-murukku",
-    tagline: "Crisp, lightly spiced spiral savoury",
+    id: "prod_palak_murukku",
+    name: "Palak Murukku",
+    slug: "palak-murukku",
+    tagline: "Crisp, lightly spiced palak murukku",
     description:
-      "Our signature Traditional Murukku is hand-crafted to a time-honoured recipe using rice flour, urad dal and carefully roasted spices. Each spiral is fried to a golden, irresistibly crisp finish.",
+      "A crisp, golden-brown palak murukku made the traditional way — light, crunchy and lightly spiced for everyday snacking.",
     categorySlug: "murukku",
     images: [
       {
-        url: "/images/products/murukku/murukku-pack.jpg",
-        alt: "Real Foods Traditional Murukku pack",
+        url: "/images/products/palak-murukku.jpg",
+        alt: "Real Foods Palak Murukku",
       },
     ],
     variants: [
       {
-        id: "var_murukku_200",
+        id: "var_palak_200",
         name: "200g Pouch",
         size: "200g",
         weightGrams: 200,
-        price: 60,
-        sku: "RF-MUR-200",
-        stock: 120,
-        inStock: true,
-      },
-      {
-        id: "var_murukku_400",
-        name: "400g Family Pack",
-        size: "400g",
-        weightGrams: 400,
-        price: 110,
-        originalPrice: 120,
-        sku: "RF-MUR-400",
-        stock: 80,
+        price: 85,
+        sku: "RF-MUR-PLK-200",
+        stock: 100,
         inStock: true,
       },
     ],
     active: true,
-    detailsPending: true,
-    tags: ["bestseller", "south-indian"],
+    tags: ["bestseller", "murukku"],
   },
   {
-    id: "prod_achappam",
-    name: "Rose Achappam",
-    slug: "rose-achappam",
-    tagline: "Delicate, crunchy traditional rose cookies",
+    id: "prod_rice_murukku",
+    name: "Rice Murukku",
+    slug: "rice-murukku",
+    tagline: "Classic rice murukku, crisp and crunchy",
     description:
-      "Rose Achappam are delicate, floral-patterned traditional treats made with rice flour and coconut milk. Light, crispy and gently sweet — a festive special turned everyday classic.",
-    categorySlug: "achappam",
+      "Freshly made rice murukku — light, crisp spirals with the authentic taste of home-style snacking.",
+    categorySlug: "murukku",
     images: [
       {
-        url: "/images/products/achappam/achappam-pack.jpg",
-        alt: "Real Foods Rose Achappam pack",
+        url: "/images/products/rice-murukku.jpg",
+        alt: "Real Foods Rice Murukku",
       },
     ],
     variants: [
       {
-        id: "var_achappam_200",
-        name: "200g Pouch",
-        size: "200g",
-        weightGrams: 200,
-        price: 75,
-        sku: "RF-ACH-200",
-        stock: 90,
-        inStock: true,
-      },
-      {
-        id: "var_achappam_400",
-        name: "400g Family Pack",
-        size: "400g",
-        weightGrams: 400,
-        price: 140,
-        originalPrice: 150,
-        sku: "RF-ACH-400",
-        stock: 45,
+        id: "var_rice_250",
+        name: "250g Pouch",
+        size: "250g",
+        weightGrams: 250,
+        price: 70,
+        sku: "RF-MUR-RCE-250",
+        stock: 100,
         inStock: true,
       },
     ],
     active: true,
-    detailsPending: true,
-    tags: ["festive", "south-indian"],
+    tags: ["classic", "murukku"],
   },
   {
-    id: "prod_chips_banana",
-    name: "Banana Chips",
-    slug: "banana-chips",
-    tagline: "Thin, crispy, naturally golden banana chips",
+    id: "prod_garlic_murukku",
+    name: "Garlic Murukku",
+    slug: "garlic-murukku",
+    tagline: "Crisp murukku with a punch of garlic",
     description:
-      "Hand-sliced ripe bananas fried to a delicate crunch. A light, wholesome snack that's naturally gluten-free.",
-    categorySlug: "chips",
+      "Golden, crispy murukku with the bold, savoury flavour of garlic — a perfect tea-time snack.",
+    categorySlug: "murukku",
     images: [
       {
-        url: "/images/hero/murukku-lifestyle.jpg",
-        alt: "Real Foods banana chips (sample image — pending confirmation)",
+        url: "/images/products/garlic-murukku.jpg",
+        alt: "Real Foods Garlic Murukku",
       },
     ],
     variants: [
       {
-        id: "var_banana_200",
+        id: "var_garlic_200",
         name: "200g Pouch",
         size: "200g",
         weightGrams: 200,
         price: 65,
-        sku: "RF-CHP-BAN-200",
-        stock: 60,
+        sku: "RF-MUR-GRC-200",
+        stock: 100,
         inStock: true,
       },
     ],
     active: true,
-    detailsPending: true,
-    tags: ["gluten-free"],
+    tags: ["garlic", "murukku"],
   },
   {
-    id: "prod_chips_potato",
-    name: "Salted Potato Chips",
-    slug: "salted-potato-chips",
-    tagline: "Golden, crunchy, perfectly salted",
+    id: "prod_small_murukku",
+    name: "Small Murukku",
+    slug: "small-murukku",
+    tagline: "Bite-sized classic murukku",
     description:
-      "Classic salted potato chips — thin, golden and satisfyingly crunchy. The perfect everyday snack.",
+      "Tiny, crispy murukku pieces that melt in the mouth — great for snacking straight from the box.",
+    categorySlug: "murukku",
+    images: [
+      {
+        url: "/images/products/small-murukku.jpg",
+        alt: "Real Foods Small Murukku",
+      },
+    ],
+    variants: [
+      {
+        id: "var_small_23n",
+        name: "23 Piece Pack",
+        size: "23 Nos",
+        price: 47,
+        sku: "RF-MUR-SML-23N",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["murukku", "bite-size"],
+  },
+  {
+    id: "prod_chakli_chips",
+    name: "Chakli Chips",
+    slug: "chakli-chips",
+    tagline: "Crunchy, twisted chakli chips",
+    description:
+      "Twisted, spiral chakli chips fried to a satisfying crunch — a classic festive snack in a shareable pack.",
     categorySlug: "chips",
     images: [
       {
-        url: "/images/products/achappam/achappam-pack.jpg",
-        alt: "Real Foods salted potato chips (sample image — pending confirmation)",
+        url: "/images/products/chakli-chips.jpg",
+        alt: "Real Foods Chakli Chips",
       },
     ],
     variants: [
       {
-        id: "var_potato_200",
+        id: "var_chakli_200",
         name: "200g Pouch",
         size: "200g",
         weightGrams: 200,
-        price: 50,
-        sku: "RF-CHP-POT-200",
-        stock: 0,
-        inStock: false,
+        price: 100,
+        sku: "RF-CHP-CHK-200",
+        stock: 100,
+        inStock: true,
       },
     ],
     active: true,
-    detailsPending: true,
-    tags: ["classic"],
+    tags: ["chakli", "festive"],
   },
   {
-    id: "prod_namkeen_ratlami",
-    name: "Ratlami Sev",
-    slug: "ratlami-sev",
-    tagline: "Crunchy, spicy, tangy lentil sev",
+    id: "prod_ragi_murukku",
+    name: "Ragi Murukku",
+    slug: "ragi-murukku",
+    tagline: "Wholesome ragi murukku",
     description:
-      "A bold, spiced lentil sev with authentic Ratlami-style heat and tang. Great on its own or as a topping.",
+      "Crisp murukku made with ragi (finger millet) — a wholesome twist on the classic, perfect with chai.",
+    categorySlug: "murukku",
+    images: [
+      {
+        url: "/images/products/ragi-murukku.jpg",
+        alt: "Real Foods Ragi Murukku",
+      },
+    ],
+    variants: [
+      {
+        id: "var_ragi_200",
+        name: "200g Pouch",
+        size: "200g",
+        weightGrams: 200,
+        price: 65,
+        sku: "RF-MUR-RGI-200",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["ragi", "wholesome"],
+  },
+  {
+    id: "prod_butter_murukku",
+    name: "Butter Murukku",
+    slug: "butter-murukku",
+    tagline: "Rich, buttery & crisp",
+    description:
+      "Smooth, melt-in-your-mouth murukku with a delicate buttery richness — a soft and tender spiral snack.",
+    categorySlug: "murukku",
+    images: [
+      {
+        url: "/images/products/butter-murukku.jpg",
+        alt: "Real Foods Butter Murukku",
+      },
+    ],
+    variants: [
+      {
+        id: "var_butter_200",
+        name: "200g Pouch",
+        size: "200g",
+        weightGrams: 200,
+        price: 65,
+        sku: "RF-MUR-BTR-200",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["butter", "murukku"],
+  },
+  {
+    id: "prod_tomato_papad_vada",
+    name: "Papad Vada (Tomato)",
+    slug: "papad-vada-tomato",
+    tagline: "Tangy tomato-flavoured papad vada",
+    description:
+      "Light, puffed papad vada with a tangy tomato flavour — a crowd-pleasing snack for every occasion.",
     categorySlug: "namkeen",
     images: [
       {
-        url: "/images/products/murukku/murukku-pack.jpg",
-        alt: "Real Foods Ratlami Sev (sample image — pending confirmation)",
+        url: "/images/products/tomato-papad-vada.jpg",
+        alt: "Real Foods Tomato Papad Vada",
       },
     ],
     variants: [
       {
-        id: "var_ratlami_200",
+        id: "var_tpv_200",
         name: "200g Pouch",
         size: "200g",
         weightGrams: 200,
-        price: 70,
-        sku: "RF-NMK-RAT-200",
-        stock: 40,
+        price: 65,
+        sku: "RF-NMK-TPV-200",
+        stock: 100,
         inStock: true,
       },
     ],
     active: true,
-    detailsPending: true,
-    tags: ["spicy"],
+    tags: ["tomato", "papad", "vegan"],
   },
   {
-    id: "prod_mixture",
-    name: "Bombay Mixture",
-    slug: "bombay-mixture",
-    tagline: "Confetti of crunchy lentil & peanut treats",
+    id: "prod_masala_murukku",
+    name: "Masala Murukku",
+    slug: "masala-murukku",
+    tagline: "Spiced masala murukku",
     description:
-      "A lively mix of crispy sev, roasted peanuts, lentils and curry leaves — tangy, crunchy and moreish.",
-    categorySlug: "mixtures",
+      "Murukku seasoned with a lively masala spice mix — crunchy, flavourful and hard to stop eating.",
+    categorySlug: "murukku",
     images: [
       {
-        url: "/images/hero/murukku-lifestyle.jpg",
-        alt: "Real Foods Bombay Mixture (sample image — pending confirmation)",
+        url: "/images/products/masala-murukku.jpg",
+        alt: "Real Foods Masala Murukku",
       },
     ],
     variants: [
       {
-        id: "var_mix_200",
-        name: "200g Pouch",
-        size: "200g",
-        weightGrams: 200,
-        price: 80,
-        sku: "RF-MIX-BOM-200",
-        stock: 55,
+        id: "var_masala_250",
+        name: "250g Pouch",
+        size: "250g",
+        weightGrams: 250,
+        price: 70,
+        sku: "RF-MUR-MSL-250",
+        stock: 100,
         inStock: true,
       },
     ],
     active: true,
-    detailsPending: true,
-    tags: ["spicy"],
+    tags: ["masala", "spicy"],
+  },
+  {
+    id: "prod_ring_murukku",
+    name: "Ring Murukku",
+    slug: "ring-murukku",
+    tagline: "Classic ring-shaped murukku",
+    description:
+      "Beautiful ring-shaped murukku, crisp and golden — a traditional favourite for festive spreads.",
+    categorySlug: "murukku",
+    images: [
+      {
+        url: "/images/products/ring-murukku.jpg",
+        alt: "Real Foods Ring Murukku",
+      },
+    ],
+    variants: [
+      {
+        id: "var_ring_250",
+        name: "250g Pouch",
+        size: "250g",
+        weightGrams: 250,
+        price: 70,
+        sku: "RF-MUR-RNG-250",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["classic", "murukku"],
+  },
+  {
+    id: "prod_murukku",
+    name: "Murukku",
+    slug: "murukku",
+    tagline: "The classic spiral murukku",
+    description:
+      "Our signature spiral murukku — golden, crisp and made to a traditional home recipe.",
+    categorySlug: "murukku",
+    images: [
+      {
+        url: "/images/products/murukku.jpg",
+        alt: "Real Foods Murukku",
+      },
+    ],
+    variants: [
+      {
+        id: "var_murukku_20n",
+        name: "20 Piece Pack",
+        size: "20 Nos",
+        price: 70,
+        sku: "RF-MUR-MRK-20N",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["bestseller", "classic"],
+  },
+  {
+    id: "prod_big_murukku",
+    name: "Big Murukku",
+    slug: "big-murukku",
+    tagline: "Large, satisfying classic murukku",
+    description:
+      "Extra-large spiral murukku with a hearty crunch — the showstopper of the murukku family.",
+    categorySlug: "murukku",
+    images: [
+      {
+        url: "/images/products/big-murukku.jpg",
+        alt: "Real Foods Big Murukku",
+      },
+    ],
+    variants: [
+      {
+        id: "var_big_23n",
+        name: "23 Piece Pack",
+        size: "23 Nos",
+        price: 95,
+        sku: "RF-MUR-BIG-23N",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["family-pack", "murukku"],
+  },
+  {
+    id: "prod_tomato_murukku",
+    name: "Tomato Murukku",
+    slug: "tomato-murukku",
+    tagline: "Tangy tomato-tinged murukku",
+    description:
+      "Crisp murukku with a gentle tangy twist of tomato — bright, savoury and moreish.",
+    categorySlug: "murukku",
+    images: [
+      {
+        url: "/images/products/tomato-murukku.jpg",
+        alt: "Real Foods Tomato Murukku",
+      },
+    ],
+    variants: [
+      {
+        id: "var_tomato_200",
+        name: "200g Pouch",
+        size: "200g",
+        weightGrams: 200,
+        price: 60,
+        sku: "RF-MUR-TMT-200",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["tomato", "tangy"],
+  },
+  {
+    id: "prod_polo",
+    name: "Polo",
+    slug: "polo",
+    tagline: "Light, crispy polo snack",
+    description:
+      "A light, crispy traditional polo snack — golden, delicate and perfect for tea-time.",
+    categorySlug: "chips",
+    images: [
+      {
+        url: "/images/products/polo.jpg",
+        alt: "Real Foods Polo",
+      },
+    ],
+    variants: [
+      {
+        id: "var_polo_200",
+        name: "200g Pouch",
+        size: "200g",
+        weightGrams: 200,
+        price: 60,
+        sku: "RF-CHP-POL-200",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["crispy", "classic"],
+  },
+  {
+    id: "prod_papad_vada",
+    name: "Papad Vada",
+    slug: "papad-vada",
+    tagline: "Light, puffed and crispy",
+    description:
+      "Fluffy, puffed papad vada that snaps lightly when you bite — a simple, satisfying snack.",
+    categorySlug: "namkeen",
+    images: [
+      {
+        url: "/images/products/papad-vada.jpg",
+        alt: "Real Foods Papad Vada",
+      },
+    ],
+    variants: [
+      {
+        id: "var_pv_200",
+        name: "200g Pouch",
+        size: "200g",
+        weightGrams: 200,
+        price: 65,
+        sku: "RF-NMK-PV-200",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["papad", "vegan"],
+  },
+  {
+    id: "prod_papad_masala",
+    name: "Papad Masala",
+    slug: "papad-masala",
+    tagline: "Spiced, crunchy papad",
+    description:
+      "Crispy papad generously seasoned with a savoury masala — a crunchy companion to any meal.",
+    categorySlug: "namkeen",
+    images: [
+      {
+        url: "/images/products/papad-masala.jpg",
+        alt: "Real Foods Papad Masala",
+      },
+    ],
+    variants: [
+      {
+        id: "var_pm_200",
+        name: "200g Pouch",
+        size: "200g",
+        weightGrams: 200,
+        price: 65,
+        sku: "RF-NMK-PM-200",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["masala", "spicy"],
+  },
+  {
+    id: "prod_achappam",
+    name: "Achappam",
+    slug: "achappam",
+    tagline: "Delicate, crunchy rose cookies",
+    description:
+      "Delicate, floral achappam — light, crispy and gently sweet, a festive special turned everyday classic.",
+    categorySlug: "achappam",
+    images: [
+      {
+        url: "/images/products/achappam.jpg",
+        alt: "Real Foods Achappam",
+      },
+    ],
+    variants: [
+      {
+        id: "var_achappam_12n",
+        name: "12 Piece Pack",
+        size: "12 Nos",
+        price: 75,
+        sku: "RF-ACH-ACH-12N",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["festive", "sweet", "classic"],
+  },
+  {
+    id: "prod_small_achappam",
+    name: "Small Achappam",
+    slug: "small-achappam",
+    tagline: "Bite-size rose cookies",
+    description:
+      "Small, delicate achappam — crispy and gently sweet, perfect for sharing during the festive season.",
+    categorySlug: "achappam",
+    images: [
+      {
+        url: "/images/products/small-achappam.jpg",
+        alt: "Real Foods Small Achappam",
+      },
+    ],
+    variants: [
+      {
+        id: "var_small_achappam_27n",
+        name: "27 Piece Pack",
+        size: "27 Nos",
+        price: 75,
+        sku: "RF-ACH-SML-27N",
+        stock: 100,
+        inStock: true,
+      },
+    ],
+    active: true,
+    tags: ["festive", "sweet"],
   },
 ];
 
 export function getFeaturedProducts(): Product[] {
-  return products.filter((p) => p.active).slice(0, 4);
+  const featuredIds = [
+    "prod_murukku",
+    "prod_palak_murukku",
+    "prod_achappam",
+    "prod_chakli_chips",
+  ];
+  const byId = new Map(products.map((p) => [p.id, p]));
+  return featuredIds
+    .map((id) => byId.get(id))
+    .filter((p): p is Product => Boolean(p && p.active));
 }
 
 export function getProductsByCategory(
@@ -275,7 +593,8 @@ export function getProductBySlug(slug: string): Product | undefined {
 export function getRelatedProducts(product: Product): Product[] {
   return products
     .filter(
-      (p) => p.active && p.id !== product.id && p.categorySlug === product.categorySlug,
+      (p) =>
+        p.active && p.id !== product.id && p.categorySlug === product.categorySlug,
     )
     .slice(0, 4);
 }

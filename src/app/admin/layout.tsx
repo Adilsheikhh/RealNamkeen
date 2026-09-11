@@ -1,10 +1,16 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { AdminNav } from "@/components/admin/admin-nav";
 import { Button } from "@/components/ui/button";
+import { getCurrentUser } from "@/lib/auth/session";
 
-export default function AdminLayout({ children }: LayoutProps<"/admin">) {
+export default async function AdminLayout({ children }: LayoutProps<"/admin">) {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+  if (user.role !== "ADMIN") redirect("/");
+
   return (
     <div className="bg-stone-100/70">
       <div className="container-page py-8 sm:py-10">
@@ -17,18 +23,18 @@ export default function AdminLayout({ children }: LayoutProps<"/admin">) {
               Business dashboard
             </h1>
           </div>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/">
-              <ArrowLeft />
-              View store
-            </Link>
-          </Button>
+          <div className="flex items-center gap-2">
+            <p className="hidden text-sm text-stone-500 sm:block">Signed in as {user.name}</p>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/">
+                <ArrowLeft />
+                View store
+              </Link>
+            </Button>
+          </div>
         </div>
 
-        <p className="mt-3 rounded-xl bg-amber-50 p-3 text-xs text-amber-800">
-          This dashboard currently shows sample data. Admin authentication and
-          live database access will be added in a later stage.
-        </p>
+        <div className="mt-3" />
 
         <div className="mt-6 grid gap-8 lg:grid-cols-[220px_1fr]">
           <AdminNav />

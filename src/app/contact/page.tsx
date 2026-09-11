@@ -17,7 +17,7 @@ const details = [
   {
     icon: Phone,
     label: "Call us",
-    value: "+91 9526395590, +91 9846906366",
+    value: "+91 95263 95590, +91 98469 06366",
   },
   {
     icon: Mail,

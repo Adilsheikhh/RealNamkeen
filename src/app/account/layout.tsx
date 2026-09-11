@@ -1,20 +1,25 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { LayoutDashboard, Package } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getCurrentUser } from "@/lib/auth/session";
 
 const accountLinks = [
   { href: "/account", label: "Account", icon: LayoutDashboard },
   { href: "/account/orders", label: "Orders", icon: Package },
 ];
 
-export default function AccountLayout({ children }: LayoutProps<"/account">) {
+export default async function AccountLayout({ children }: LayoutProps<"/account">) {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
   return (
     <div className="container-page py-10 sm:py-14">
       <h1 className="font-display text-3xl font-semibold leading-tight text-stone-900 sm:text-4xl">
         My account
       </h1>
       <p className="mt-2 text-stone-500">
-        This account section is sample data until authentication is implemented.
+        Signed in as {user.name} · {user.email}
       </p>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[220px_1fr]">

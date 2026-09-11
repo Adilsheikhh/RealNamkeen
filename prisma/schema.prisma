@@ -1,19 +1,16 @@
 // Prisma schema — Real Foods storefront.
 //
-// This schema is the target data model for the app. The current storefront
-// uses mock data in src/lib/data/, and reads can be switched to this
-// database without changing the UI.
-//
-// NOTE: the DB is not wired up yet — run `prisma migrate dev` once a
-// Postgres connection string is configured in .env.
+// `DATABASE_URL` is the pooled Neon endpoint used at runtime; `DIRECT_URL`
+// bypasses PgBouncer for migrations (`prisma migrate deploy`).
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum UserRole {
@@ -63,7 +60,8 @@ model User {
 
 model Address {
   id        String   @id @default(cuid())
-  userId    String
+  userId    String?
+  name      String?
   label     String?
   line1     String
   line2     String?
@@ -73,7 +71,7 @@ model Address {
   phone     String
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
   orders  Order[] @relation("OrderBillingAddress")
 }
 
@@ -97,6 +95,7 @@ model Product {
   description String
   categoryId  String
   active      Boolean  @default(true)
+  tags        String[] @default([])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -119,16 +118,16 @@ model ProductImage {
 }
 
 model ProductVariant {
-  id            String  @id @default(cuid())
-  productId     String
-  name          String
-  size          String
-  weightGrams   Int
-  price         Decimal @db.Decimal(10, 2)
+id          String  @id @default(cuid())
+  productId   String
+  name        String
+  size        String
+  weightGrams Int?
+  price       Decimal @db.Decimal(10, 2)
   originalPrice Decimal? @db.Decimal(10, 2)
-  sku           String  @unique
-  stock         Int     @default(0)
-  inStock       Boolean @default(true)
+  sku         String  @unique
+  stock       Int     @default(0)
+  inStock     Boolean @default(true)
 
   product       Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
   cartItems     CartItem[]

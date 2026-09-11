@@ -3,7 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
-import { mockOrders } from "@/lib/data/orders";
+import { getCurrentUser } from "@/lib/auth/session";
+import { listMyOrders } from "@/lib/db/orders";
 import { formatPrice } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -11,19 +12,31 @@ export const metadata: Metadata = {
   description: "View your Real Foods order history.",
 };
 
-export default function AccountOrdersPage() {
+export default async function AccountOrdersPage() {
+  const user = await getCurrentUser();
+  const orders = user ? await listMyOrders(user.id) : [];
+
   return (
     <div>
       <h2 className="font-display text-xl font-semibold text-stone-900">Orders</h2>
       <p className="mt-1 text-sm text-stone-500">
-        Sample order history until checkout and storage are implemented.
+        Your order history.
       </p>
 
+      {orders.length === 0 && (
+        <div className="mt-4 rounded-2xl border border-dashed border-stone-300 bg-stone-50 px-6 py-10 text-center text-sm text-stone-500">
+          <p className="font-medium text-stone-700">No orders yet</p>
+          <p className="mt-1">
+            Once you place an order it will appear here.
+          </p>
+        </div>
+      )}
+
       <ul className="mt-4 space-y-4">
-        {mockOrders.map((order) => (
+        {orders.map((order) => (
           <li key={order.id}>
             <Link
-              href={`/account/orders/${order.id}`}
+              href={`/account/orders/${order.orderNumber}`}
               className="block rounded-2xl border border-stone-200 bg-white p-5 transition-shadow hover:shadow-md"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">

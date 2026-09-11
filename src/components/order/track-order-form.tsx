@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { PackageSearch } from "lucide-react";
 
+import { lookupOrderAction } from "@/app/actions/orders";
 import { OrderStatusBadge } from "@/components/order/order-status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getMockOrderById } from "@/lib/data/orders";
 import { formatPrice } from "@/lib/utils";
 import type { Order } from "@/types/order";
 
@@ -16,13 +16,18 @@ export function TrackOrderForm() {
   const [orderNumber, setOrderNumber] = useState("");
   const [result, setResult] = useState<Order | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [searching, setSearching] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const q = orderNumber.trim();
-    const order = getMockOrderById(q);
+    if (!q) return;
+    setSearching(true);
+    setNotFound(false);
+    const order = (await lookupOrderAction(q)) as Order | null;
     setNotFound(!order);
     setResult(order ?? null);
+    setSearching(false);
   }
 
   return (
@@ -41,18 +46,17 @@ export function TrackOrderForm() {
               setOrderNumber(e.target.value);
               setNotFound(false);
             }}
-            placeholder="e.g. RF-1001 or ord_1"
+            placeholder="e.g. RF-8F3A2B"
           />
         </div>
-        <Button type="submit">Track</Button>
+        <Button type="submit" disabled={searching}>{searching ? "Searching…" : "Track"}</Button>
       </form>
 
       {notFound && (
         <div className="rounded-2xl border border-dashed border-amber-300 bg-amber-50 px-6 py-10 text-center">
           <p className="font-medium text-amber-900">Order not found</p>
           <p className="mt-1 text-sm text-amber-700">
-            Check the order number and try again. Tracking is mock data in this
-            build.
+            Check the order number and try again.
           </p>
         </div>
       )}
@@ -107,8 +111,8 @@ export function TrackOrderForm() {
           About tracking
         </p>
         <p className="mt-2">
-          Tracking currently shows sample order data. Live order status will be
-          available once orders and status updates are implemented.
+          Tracking looks up orders by number in the live database.
+          You&apos;ll receive an order number in the confirmation page after checkout.
         </p>
       </div>
     </div>

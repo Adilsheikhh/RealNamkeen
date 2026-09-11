@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-import { categories } from "@/lib/data/products";
+import { listCategories } from "@/lib/db/products";
 import { ProductImage } from "@/components/product/product-image";
 
-export function CategoriesSection() {
+export async function CategoriesSection() {
+  const categories = await listCategories();
   return (
     <section className="container-page py-16 sm:py-20">
       <div className="mx-auto max-w-2xl text-center">
