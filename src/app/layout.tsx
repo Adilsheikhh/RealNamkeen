@@ -82,6 +82,7 @@ export const metadata: Metadata = {
     "geo.region": "IN-KL",
     "geo.placename": "Kannur",
     ICBM: "11.8745, 75.3704",
+    "google-site-verification": "google3ff884bde5406a4f",
   },
 };
 
