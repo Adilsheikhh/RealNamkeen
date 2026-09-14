@@ -9,6 +9,10 @@ import { HeroSection } from "@/components/home/hero-section";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { WhyChooseUsSection } from "@/components/home/why-choose-us-section";
 
+// Homepage reads the catalogue from the database on every request so price and
+// stock updates made in the DB show up immediately.
+export const dynamic = "force-dynamic";
+
 const localBusinessJsonLd = {
   "@context": "https://schema.org",
   "@type": ["Store", "FoodEstablishment"],
@@ -20,7 +24,7 @@ const localBusinessJsonLd = {
     "Authentic, freshly made namkeen and traditional snacks from Kannur, Kerala — murukku, achappam, chips and more.",
   email: BUSINESS.email,
   telephone: BUSINESS.telephones,
-  priceRange: "₹20–₹100",
+  priceRange: "₹225",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Kannur",
